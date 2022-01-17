@@ -1,5 +1,13 @@
+import Header from './components/Header/Header';
+
 function App() {
-	return <div>React</div>;
+	return (
+		<main>
+			<div className='container'>
+				<Header />
+			</div>
+		</main>
+	);
 }
 
 export default App;
