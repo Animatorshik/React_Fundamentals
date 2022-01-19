@@ -1,6 +1,9 @@
 import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 
+/**
+ * Header React component
+ */
 function Header() {
 	return (
 		<header>

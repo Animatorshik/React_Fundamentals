@@ -1,10 +1,22 @@
 import Button from '../../../../common/Button/Button';
 
+/**
+ * Get the Date in the correct format.
+ *
+ * @param {string} stockDate
+ * @returns {string} M.d.YYY
+ */
 let getCorrectDate = (stockDate) => {
 	let date = new Date(stockDate);
 	return `${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`;
 };
 
+/**
+ * Get the Duration in the correct format.
+ *
+ * @param {number} stockMinutes
+ * @returns {string} hh:mm hours
+ */
 let getCorrectDuration = (stockMinutes) => {
 	let hours = Math.floor(stockMinutes / 60);
 	let minutes = stockMinutes % 60;
@@ -15,6 +27,12 @@ let getCorrectDuration = (stockMinutes) => {
 	return `${hours}:${minutes} hours`;
 };
 
+/**
+ * Crop the string and add '...' in the end
+ *
+ * @param {string} stockString
+ * @returns {string}
+ */
 let getCroppedString = (stockString) => {
 	const maxLength = 27;
 
@@ -24,6 +42,9 @@ let getCroppedString = (stockString) => {
 	return stockString;
 };
 
+/**
+ * CardInformationItem React component
+ */
 function CardInformationItem(props) {
 	return (
 		<div className={`course-${props.name}`}>
@@ -33,6 +54,9 @@ function CardInformationItem(props) {
 	);
 }
 
+/**
+ * CourseCard React component
+ */
 function CourseCard(props) {
 	return (
 		<div className='course-card' id={props.id}>

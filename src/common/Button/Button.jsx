@@ -1,3 +1,6 @@
+/**
+ * Button React component
+ */
 function Button(props) {
 	return (
 		<button className={props.buttonClass} onClick={props.onClick}>

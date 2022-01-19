@@ -32,6 +32,12 @@ const mockedAuthorsList = [
 	{ id: '095a1817-d45b-4ed7-9cf7-b2417bcbf748', name: 'Valentina Larina' },
 ];
 
+/**
+ * Get Authors Names by IDs and join them in one string
+ *
+ * @param {string[]} authorIDs
+ * @returns {string}
+ */
 let getAuthorsNames = (authorIDs) => {
 	let names = [];
 	authorIDs.forEach((id) => {
@@ -41,6 +47,9 @@ let getAuthorsNames = (authorIDs) => {
 	return names.join(', ');
 };
 
+/**
+ * Courses React component
+ */
 function Courses(props) {
 	return (
 		<div className='courses'>
