@@ -1,19 +1,17 @@
 /**
- * Input React component
+ * Textarea React component
  */
-function Input(props) {
+function Textarea(props) {
 	return (
 		<>
 			<label htmlFor={props.id}>{props.labelText}</label>
-			<input
-				type={props.type}
+			<textarea
 				id={props.id}
 				placeholder={props.placeholdetText}
-				onChange={props.onChange}
 				className='form-control'
-			></input>
+			></textarea>
 		</>
 	);
 }
 
-export default Input;
+export default Textarea;

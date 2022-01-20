@@ -10,7 +10,9 @@ function SearchBar(props) {
 			<div className='row'>
 				<div className='col-8'>
 					<Input
+						type='text'
 						id='search'
+						name='search'
 						placeholdetText='Enter course name...'
 						onChange={props.actionInput}
 					/>
