@@ -1,31 +1,7 @@
 import Button from '../../../../common/Button/Button';
 
-/**
- * Get the Date in the correct format.
- *
- * @param {string} stockDate
- * @returns {string} M.d.YYY
- */
-let getCorrectDate = (stockDate) => {
-	let date = new Date(stockDate);
-	return `${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`;
-};
-
-/**
- * Get the Duration in the correct format.
- *
- * @param {number} stockMinutes
- * @returns {string} hh:mm hours
- */
-let getCorrectDuration = (stockMinutes) => {
-	let hours = Math.floor(stockMinutes / 60);
-	let minutes = stockMinutes % 60;
-
-	hours = hours < 10 ? `0${hours}` : hours;
-	minutes = minutes < 10 ? `0${minutes}` : minutes;
-
-	return `${hours}:${minutes} hours`;
-};
+import { pipeDuration } from '../../../../helpers/pipeDuration';
+import { dateGenerator } from '../../../../helpers/dateGeneratop';
 
 /**
  * Crop the string and add '...' in the end
@@ -71,11 +47,11 @@ function CourseCard(props) {
 				/>
 				<CardInformationItem
 					name='duration'
-					value={getCorrectDuration(props.duration)}
+					value={pipeDuration(props.duration)}
 				/>
 				<CardInformationItem
 					name='created'
-					value={getCorrectDate(props.created)}
+					value={dateGenerator(props.created)}
 				/>
 				<div className='show-course'>
 					<Button

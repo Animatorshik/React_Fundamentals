@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
 import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
 import SearchBar from './components/SearchBar/SearchBar';
+import CreateCourse from '../CreateCourse/CreateCourse';
 
 const mockedCoursesList = [
 	{
@@ -81,6 +83,8 @@ let getCourses = () => {
  */
 function Courses(props) {
 	const [coursesList, setCoursesList] = useState(mockedCoursesList);
+	const [coursesHidden, setCoursesHidden] = useState(props.hidden);
+	const [createCourseFormDisplay, setCreateCourseFormDisplay] = useState(false);
 
 	// Find courses by Search input value
 	let findCourses = () => {
@@ -97,35 +101,48 @@ function Courses(props) {
 		}
 	};
 
-	return (
-		<>
-			<div className='row mt-4'>
-				<div className='col-lg-7 mb-4 mb-lg-0'>
-					<SearchBar actionButton={findCourses} actionInput={clerFilter} />
-				</div>
-				<div className='col-lg-5 text-end'>
-					<Button
-						buttonClass='btn btn-outline-success'
-						buttonText='Add new course'
-					/>
-				</div>
-			</div>
-			<div className='courses'>
-				{coursesList.map((course) => {
-					return (
-						<CourseCard
-							key={course.id}
-							title={course.title}
-							description={course.description}
-							authors={getAuthorsNames(course.authors)}
-							duration={course.duration}
-							created={course.creationDate}
+	// Render the Create Course Form
+	let renderCreateCourseForm = () => {
+		setCoursesHidden(true);
+		setCreateCourseFormDisplay(true);
+	};
+
+	if (!coursesHidden) {
+		return (
+			<div className='courses-wrapper'>
+				<div className='row mt-4'>
+					<div className='col-lg-7 mb-4 mb-lg-0'>
+						<SearchBar actionButton={findCourses} actionInput={clerFilter} />
+					</div>
+					<div className='col-lg-5 text-end'>
+						<Button
+							buttonClass='btn btn-outline-success'
+							buttonText='Add new course'
+							onClick={renderCreateCourseForm}
 						/>
-					);
-				})}
+					</div>
+				</div>
+				<div className='courses'>
+					{coursesList.map((course) => {
+						return (
+							<CourseCard
+								key={course.id}
+								title={course.title}
+								description={course.description}
+								authors={getAuthorsNames(course.authors)}
+								duration={course.duration}
+								created={course.creationDate}
+							/>
+						);
+					})}
+				</div>
 			</div>
-		</>
-	);
+		);
+	}
+	if (createCourseFormDisplay) {
+		return <CreateCourse />;
+	}
+	return false;
 }
 
 export default Courses;
