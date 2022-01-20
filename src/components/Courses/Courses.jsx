@@ -82,15 +82,26 @@ let getCourses = () => {
 function Courses(props) {
 	const [coursesList, setCoursesList] = useState(mockedCoursesList);
 
+	// Find courses by Search input value
 	let findCourses = () => {
 		setCoursesList(getCourses());
+	};
+
+	// Display all Courses if Search input is clear
+	let clerFilter = () => {
+		// Get Search input value
+		let inputData = document.getElementById('search').value;
+
+		if (!inputData) {
+			setCoursesList(mockedCoursesList);
+		}
 	};
 
 	return (
 		<>
 			<div className='row mt-4'>
 				<div className='col-lg-7 mb-4 mb-lg-0'>
-					<SearchBar action={findCourses} />
+					<SearchBar actionButton={findCourses} actionInput={clerFilter} />
 				</div>
 				<div className='col-lg-5 text-end'>
 					<Button

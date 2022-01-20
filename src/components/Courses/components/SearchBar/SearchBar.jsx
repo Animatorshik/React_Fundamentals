@@ -9,13 +9,17 @@ function SearchBar(props) {
 		<div className='search-wrapper'>
 			<div className='row'>
 				<div className='col-8'>
-					<Input id='search' placeholdetText='Enter course name...' />
+					<Input
+						id='search'
+						placeholdetText='Enter course name...'
+						onChange={props.actionInput}
+					/>
 				</div>
 				<div className='col-4 col-lg-auto'>
 					<Button
 						buttonClass='btn btn-outline-primary w-100'
 						buttonText='Search'
-						onClick={props.action}
+						onClick={props.actionButton}
 					/>
 				</div>
 			</div>
