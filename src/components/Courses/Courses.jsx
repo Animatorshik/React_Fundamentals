@@ -1,4 +1,7 @@
+import React, { useState } from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
+import Button from '../../common/Button/Button';
+import SearchBar from './components/SearchBar/SearchBar';
 
 const mockedCoursesList = [
 	{
@@ -48,24 +51,69 @@ let getAuthorsNames = (authorIDs) => {
 };
 
 /**
+ * Search courses by Title or ID
+ *
+ * @returns Object[]
+ */
+let getCourses = () => {
+	// Get Search input value
+	let inputData = document.getElementById('search').value;
+	inputData = inputData.toLowerCase();
+
+	// The array with search result
+	let searchResult = [];
+
+	// Looking for courses by Title or ID
+	mockedCoursesList.forEach((course) => {
+		let courseTitle = course.title.toLowerCase();
+		let courseId = course.id.toLowerCase();
+		if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
+			// If found, add to result array
+			searchResult.push(course);
+		}
+	});
+
+	return searchResult;
+};
+
+/**
  * Courses React component
  */
 function Courses(props) {
+	const [coursesList, setCoursesList] = useState(mockedCoursesList);
+
+	let findCourses = () => {
+		setCoursesList(getCourses());
+	};
+
 	return (
-		<div className='courses'>
-			{mockedCoursesList.map((course) => {
-				return (
-					<CourseCard
-						key={course.id}
-						title={course.title}
-						description={course.description}
-						authors={getAuthorsNames(course.authors)}
-						duration={course.duration}
-						created={course.creationDate}
+		<>
+			<div className='row mt-4'>
+				<div className='col-lg-7 mb-4 mb-lg-0'>
+					<SearchBar action={findCourses} />
+				</div>
+				<div className='col-lg-5 text-end'>
+					<Button
+						buttonClass='btn btn-outline-success'
+						buttonText='Add new course'
 					/>
-				);
-			})}
-		</div>
+				</div>
+			</div>
+			<div className='courses'>
+				{coursesList.map((course) => {
+					return (
+						<CourseCard
+							key={course.id}
+							title={course.title}
+							description={course.description}
+							authors={getAuthorsNames(course.authors)}
+							duration={course.duration}
+							created={course.creationDate}
+						/>
+					);
+				})}
+			</div>
+		</>
 	);
 }
 
