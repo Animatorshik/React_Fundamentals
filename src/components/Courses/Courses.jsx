@@ -43,10 +43,10 @@ const mockedAuthorsList = [
  * @param {string[]} authorIDs
  * @returns {string}
  */
-let getAuthorsNames = (authorIDs) => {
+let getAuthorsNames = (authorIDs, authorsList) => {
 	let names = [];
 	authorIDs.forEach((id) => {
-		let foundAuthor = mockedAuthorsList.find((e) => e.id === id);
+		let foundAuthor = authorsList.find((e) => e.id === id);
 		names.push(foundAuthor.name);
 	});
 	return names.join(', ');
@@ -57,7 +57,7 @@ let getAuthorsNames = (authorIDs) => {
  *
  * @returns Object[]
  */
-let getCourses = () => {
+let getSearchedCourses = (coursesList) => {
 	// Get Search input value
 	let inputData = document.getElementById('search').value;
 	inputData = inputData.toLowerCase();
@@ -66,7 +66,7 @@ let getCourses = () => {
 	let searchResult = [];
 
 	// Looking for courses by Title or ID
-	mockedCoursesList.forEach((course) => {
+	coursesList.forEach((course) => {
 		let courseTitle = course.title.toLowerCase();
 		let courseId = course.id.toLowerCase();
 		if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
@@ -82,26 +82,38 @@ let getCourses = () => {
  * Courses React component
  */
 function Courses(props) {
-	const [coursesList, setCoursesList] = useState(mockedCoursesList);
+	const [coursesList, setCoursesList] = useState(
+		props.coursesList ? props.coursesList : mockedCoursesList
+	);
+	const [authorsList, setAuthorsList] = useState(
+		props.authorsList ? props.authorsList : mockedAuthorsList
+	);
 	const [coursesHidden, setCoursesHidden] = useState(props.hidden);
 	const [createCourseFormDisplay, setCreateCourseFormDisplay] = useState(false);
+	const [saveCoursesList, setSaveCoursesList] = useState(coursesList);
 
-	// Find courses by Search input value
+	/**
+	 * Find courses by Search input value
+	 */
 	let findCourses = () => {
-		setCoursesList(getCourses());
+		setCoursesList(getSearchedCourses(coursesList));
 	};
 
-	// Display all Courses if Search input is clear
+	/**
+	 * Display all Courses if Search input is clear
+	 */
 	let clerFilter = () => {
 		// Get Search input value
 		let inputData = document.getElementById('search').value;
 
 		if (!inputData) {
-			setCoursesList(mockedCoursesList);
+			setCoursesList(saveCoursesList);
 		}
 	};
 
-	// Render the Create Course Form
+	/**
+	 * Render the Create Course Form
+	 */
 	let renderCreateCourseForm = () => {
 		setCoursesHidden(true);
 		setCreateCourseFormDisplay(true);
@@ -129,7 +141,7 @@ function Courses(props) {
 								key={course.id}
 								title={course.title}
 								description={course.description}
-								authors={getAuthorsNames(course.authors)}
+								authors={getAuthorsNames(course.authors, authorsList)}
 								duration={course.duration}
 								created={course.creationDate}
 							/>
@@ -140,7 +152,13 @@ function Courses(props) {
 		);
 	}
 	if (createCourseFormDisplay) {
-		return <CreateCourse />;
+		return (
+			<CreateCourse
+				coursesList={coursesList}
+				authorsList={authorsList}
+				hidden={false}
+			/>
+		);
 	}
 	return false;
 }
