@@ -138,12 +138,15 @@ function CreateCourse(props) {
 		setDuration(pipeDuration(stockDuration));
 	};
 
+	/**
+	 * Create a new course
+	 */
 	let createNewCourse = () => {
 		let id = uuidv4();
 		let title = document.getElementById('createCourseTitle').value;
 		let description = document.getElementById('createCourseDescription').value;
-		let d = new Date();
-		let creationDate = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+		let date = new Date();
+		let creationDate = date.toLocaleDateString('en-US');
 		let duration = Number(
 			document.getElementById('createCourseDuration').value
 		);
