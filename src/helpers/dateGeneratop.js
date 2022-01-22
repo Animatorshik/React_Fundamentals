@@ -2,7 +2,7 @@
  * Get the Date in the correct format.
  *
  * @param {string} stockDate
- * @returns {string} M.d.YYY
+ * @returns {string} m.d.yyyy
  */
 export function dateGenerator(stockDate) {
 	let date = new Date(stockDate);

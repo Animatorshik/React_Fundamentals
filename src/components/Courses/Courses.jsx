@@ -96,7 +96,7 @@ function Courses(props) {
 	 * Find courses by Search input value
 	 */
 	let findCourses = () => {
-		setCoursesList(getSearchedCourses(coursesList));
+		setCoursesList(getSearchedCourses(saveCoursesList));
 	};
 
 	/**

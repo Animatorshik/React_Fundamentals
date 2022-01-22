@@ -8,6 +8,10 @@
 		margin: 20px 0;
 		border: 1px solid $course-border-color;
 
+		@media all and (max-width: 767px) {
+			flex-direction: column;
+		}
+
 		.right-side {
 			width: 100%;
 			min-width: 300px;
@@ -16,6 +20,11 @@
 			.show-course {
 				margin-top: 10px;
 				text-align: center;
+			}
+
+			@media all and (max-width: 767px) {
+				margin-top: 10px;
+				max-width: unset;
 			}
 		}
 	}
