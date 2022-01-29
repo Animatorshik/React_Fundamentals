@@ -9,7 +9,7 @@ function Input(props) {
 				type={props.type}
 				id={props.id}
 				placeholder={props.placeholdetText}
-				onChange={props.onChange}
+				onChange={(e) => props.onChange(e.target.value)}
 				className='form-control'
 			></input>
 		</>

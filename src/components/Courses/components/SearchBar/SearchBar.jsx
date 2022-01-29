@@ -14,14 +14,14 @@ function SearchBar(props) {
 						id='search'
 						name='search'
 						placeholdetText='Enter course name...'
-						onChange={props.actionInput}
+						onChange={(value) => props.onInputChange(value)}
 					/>
 				</div>
 				<div className='col-4 col-lg-auto'>
 					<Button
 						buttonClass='btn btn-outline-primary w-100'
 						buttonText='Search'
-						onClick={props.actionButton}
+						onClick={() => props.onButtonClick()}
 					/>
 				</div>
 			</div>
