@@ -3,7 +3,7 @@
  */
 function Button(props) {
 	return (
-		<button className={props.buttonClass} onClick={props.onClick}>
+		<button type='button' className={props.buttonClass} onClick={props.onClick}>
 			<>{props.buttonText}</>
 		</button>
 	);

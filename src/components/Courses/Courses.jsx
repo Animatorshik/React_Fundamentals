@@ -1,41 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
 import SearchBar from './components/SearchBar/SearchBar';
-import CreateCourse from '../CreateCourse/CreateCourse';
-
-const mockedCoursesList = [
-	{
-		id: 'de5aaa59-90f5-4dbc-b8a9-aaf205c551ba',
-		title: 'JavaScript',
-		description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially u nchanged.`,
-		creationDate: '8/3/2021',
-		duration: 160,
-		authors: [
-			'27cc3006-e93a-4748-8ca8-73d06aa93b6d',
-			'f762978b-61eb-4096-812b-ebde22838167',
-		],
-	},
-	{
-		id: 'b5630fdd-7bf7-4d39-b75a-2b5906fd0916',
-		title: 'Angular',
-		description: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`,
-		creationDate: '10/11/2020',
-		duration: 210,
-		authors: [
-			'df32994e-b23d-497c-9e4d-84e4dc02882f',
-			'095a1817-d45b-4ed7-9cf7-b2417bcbf748',
-		],
-	},
-];
-
-const mockedAuthorsList = [
-	{ id: '27cc3006-e93a-4748-8ca8-73d06aa93b6d', name: 'Vasiliy Dobkin' },
-	{ id: 'f762978b-61eb-4096-812b-ebde22838167', name: 'Nicolas Kim' },
-	{ id: 'df32994e-b23d-497c-9e4d-84e4dc02882f', name: 'Anna Sidorenko' },
-	{ id: '095a1817-d45b-4ed7-9cf7-b2417bcbf748', name: 'Valentina Larina' },
-];
 
 /**
  * Get Authors Names by IDs and join them in one string
@@ -53,114 +20,79 @@ let getAuthorsNames = (authorIDs, authorsList) => {
 };
 
 /**
- * Search courses by Title or ID
- *
- * @returns Object[]
- */
-let getSearchedCourses = (coursesList) => {
-	// Get Search input value
-	let inputData = document.getElementById('search').value;
-	inputData = inputData.toLowerCase();
-
-	// The array with search result
-	let searchResult = [];
-
-	// Looking for courses by Title or ID
-	coursesList.forEach((course) => {
-		let courseTitle = course.title.toLowerCase();
-		let courseId = course.id.toLowerCase();
-		if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
-			// If found, add to result array
-			searchResult.push(course);
-		}
-	});
-
-	return searchResult;
-};
-
-/**
  * Courses React component
  */
 function Courses(props) {
-	const [coursesList, setCoursesList] = useState(
-		props.coursesList ? props.coursesList : mockedCoursesList
-	);
-	const [authorsList, setAuthorsList] = useState(
-		props.authorsList ? props.authorsList : mockedAuthorsList
-	);
-	const [coursesHidden, setCoursesHidden] = useState(props.hidden);
-	const [createCourseFormDisplay, setCreateCourseFormDisplay] = useState(false);
-	const [saveCoursesList, setSaveCoursesList] = useState(coursesList);
+	const [coursesList, setCoursesList] = useState(props.coursesList);
+	const [searchValue, setSearchValue] = useState('');
+	const saveCoursesList = [...props.coursesList];
 
 	/**
-	 * Find courses by Search input value
+	 * Search courses by Title or ID
 	 */
 	let findCourses = () => {
-		setCoursesList(getSearchedCourses(saveCoursesList));
+		// Get Search input value
+		let inputData = searchValue.toLowerCase();
+
+		// The array with search result
+		let searchResult = [];
+
+		// Looking for courses by Title or ID
+		coursesList.forEach((course) => {
+			let courseTitle = course.title.toLowerCase();
+			let courseId = course.id.toLowerCase();
+			if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
+				// If found, add to result array
+				searchResult.push(course);
+			}
+		});
+
+		setCoursesList(searchResult);
 	};
 
 	/**
 	 * Display all Courses if Search input is clear
 	 */
-	let clerFilter = () => {
-		// Get Search input value
-		let inputData = document.getElementById('search').value;
-
-		if (!inputData) {
+	useEffect(() => {
+		if (!searchValue) {
 			setCoursesList(saveCoursesList);
 		}
-	};
+	}, [searchValue]);
 
-	/**
-	 * Render the Create Course Form
-	 */
-	let renderCreateCourseForm = () => {
-		setCoursesHidden(true);
-		setCreateCourseFormDisplay(true);
-	};
-
-	if (!coursesHidden) {
-		return (
-			<div className='courses-wrapper'>
-				<div className='row mt-4'>
-					<div className='col-lg-7 mb-4 mb-lg-0'>
-						<SearchBar actionButton={findCourses} actionInput={clerFilter} />
-					</div>
-					<div className='col-lg-5 text-end'>
-						<Button
-							buttonClass='btn btn-outline-success'
-							buttonText='Add new course'
-							onClick={renderCreateCourseForm}
-						/>
-					</div>
+	return (
+		<div className='courses-wrapper'>
+			<div className='row mt-4'>
+				<div className='col-lg-7 mb-4 mb-lg-0'>
+					<SearchBar
+						onButtonClick={findCourses}
+						onInputChange={(value) => setSearchValue(value)}
+					/>
 				</div>
-				<div className='courses'>
-					{coursesList.map((course) => {
-						return (
-							<CourseCard
-								key={course.id}
-								title={course.title}
-								description={course.description}
-								authors={getAuthorsNames(course.authors, authorsList)}
-								duration={course.duration}
-								created={course.creationDate}
-							/>
-						);
-					})}
+				<div className='col-lg-5 text-end'>
+					<Button
+						buttonClass='btn btn-outline-success'
+						buttonText='Add new course'
+						onClick={props.onCreateCourseButtonClick}
+					/>
 				</div>
 			</div>
-		);
-	}
-	if (createCourseFormDisplay) {
-		return (
-			<CreateCourse
-				coursesList={coursesList}
-				authorsList={authorsList}
-				hidden={false}
-			/>
-		);
-	}
-	return false;
+			<div className='courses'>
+				{coursesList.map((course) => {
+					return (
+						<CourseCard
+							key={course.id}
+							id={course.id}
+							title={course.title}
+							description={course.description}
+							authors={getAuthorsNames(course.authors, props.authorsList)}
+							duration={course.duration}
+							created={course.creationDate}
+						/>
+					);
+				})}
+			</div>
+		</div>
+	);
 }
 
 export default Courses;

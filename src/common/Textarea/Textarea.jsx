@@ -8,6 +8,7 @@ function Textarea(props) {
 			<textarea
 				id={props.id}
 				placeholder={props.placeholdetText}
+				onChange={(e) => props.onChange(e.target.value)}
 				className='form-control'
 			></textarea>
 		</>
