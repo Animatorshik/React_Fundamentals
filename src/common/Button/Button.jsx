@@ -5,7 +5,11 @@ import PropTypes from 'prop-types';
  */
 function Button(props) {
 	return (
-		<button type='button' className={props.buttonClass} onClick={props.onClick}>
+		<button
+			type={props.type}
+			className={props.buttonClass}
+			onClick={props.onClick}
+		>
 			<>{props.buttonText}</>
 		</button>
 	);

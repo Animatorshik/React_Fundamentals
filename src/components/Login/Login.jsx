@@ -37,11 +37,16 @@ function Login() {
 		});
 	};
 
+	// Disable page reloading after form submit
+	let handleSubmit = (event) => {
+		event.preventDefault();
+	};
+
 	return (
 		<div className='sign-up-form registration'>
 			<h1>Login</h1>
 			<Errors errors={errors} />
-			<form>
+			<form onSubmit={handleSubmit}>
 				<div className='mb-3'>
 					<Input
 						id='email'
@@ -62,6 +67,7 @@ function Login() {
 				</div>
 				<div className='mb-3'>
 					<Button
+						type='submit'
 						buttonClass='btn btn-outline-success'
 						onClick={loginUser}
 						buttonText='Login'
