@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 /**
  * Errors React component
  */
@@ -14,5 +16,9 @@ function Errors(props) {
 		</div>
 	);
 }
+
+Errors.propTypes = {
+	errors: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default Errors;

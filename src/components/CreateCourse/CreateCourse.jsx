@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -250,5 +251,18 @@ function CreateCourse(props) {
 		</div>
 	);
 }
+
+CreateCourse.propTypes = {
+	authorsList: PropTypes.arrayOf(PropTypes.object),
+	onCreateCourseButtonClick: PropTypes.func,
+	onCreateAuthorButtonClick: PropTypes.func,
+};
+
+AuthorWithButton.propTypes = {
+	name: PropTypes.string,
+	buttonClass: PropTypes.string,
+	buttonText: PropTypes.string,
+	onClick: PropTypes.func,
+};
 
 export default CreateCourse;

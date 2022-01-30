@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
@@ -94,5 +95,11 @@ function Courses(props) {
 		</div>
 	);
 }
+
+Courses.propTypes = {
+	coursesList: PropTypes.arrayOf(PropTypes.object),
+	authorsList: PropTypes.arrayOf(PropTypes.object),
+	onCreateCourseButtonClick: PropTypes.func,
+};
 
 export default Courses;

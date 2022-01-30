@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { pipeDuration } from '../../helpers/pipeDuration';
 import { dateGenerator } from '../../helpers/dateGeneratop';
@@ -70,5 +71,10 @@ function CourseInfo(props) {
 		</>
 	);
 }
+
+CourseInfo.propTypes = {
+	coursesList: PropTypes.arrayOf(PropTypes.object),
+	authorsList: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default CourseInfo;

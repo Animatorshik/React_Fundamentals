@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 /**
  * Input React component
  */
@@ -15,5 +17,13 @@ function Input(props) {
 		</>
 	);
 }
+
+Input.propTypes = {
+	id: PropTypes.string,
+	type: PropTypes.string,
+	labelText: PropTypes.string,
+	placeholdetText: PropTypes.string,
+	onChange: PropTypes.func,
+};
 
 export default Input;

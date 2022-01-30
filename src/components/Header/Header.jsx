@@ -6,7 +6,7 @@ import Button from '../../common/Button/Button';
 /**
  * Header React component
  */
-function Header(props) {
+function Header() {
 	const pathname = useLocation().pathname;
 	const navigate = useNavigate();
 
