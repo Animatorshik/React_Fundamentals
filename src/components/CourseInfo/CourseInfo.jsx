@@ -20,7 +20,7 @@ function CourseInfo(props) {
 		if (!course) {
 			navigate('/courses');
 		}
-	});
+	}, [course, navigate]);
 
 	/**
 	 * Get Author Name
