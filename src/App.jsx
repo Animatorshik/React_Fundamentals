@@ -45,10 +45,10 @@ function App() {
 	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
-	let userToken = localStorage.getItem('user');
 
 	// Redirecting to the login page if the user is not authorized
 	useEffect(() => {
+		let userToken = localStorage.getItem('user');
 		if (!userToken && pathname !== '/login' && pathname !== '/registration') {
 			navigate('/login');
 		}
@@ -59,7 +59,7 @@ function App() {
 				navigate('/courses');
 			}
 		}
-	}, [navigate, pathname, userToken]);
+	}, [navigate, pathname]);
 
 	/**
 	 * Add a new course to the list
