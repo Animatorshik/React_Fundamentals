@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import Header from './components/Header/Header';
+import Registration from './components/Registration/Registration';
+import Login from './components/Login/Login';
 import Courses from './components/Courses/Courses';
 import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseInfo from './components/CourseInfo/CourseInfo';
 
 const mockedCoursesList = [
 	{
@@ -39,7 +43,23 @@ const mockedAuthorsList = [
 function App() {
 	const [coursesList, setCoursesList] = useState(mockedCoursesList);
 	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
-	const [step, setStep] = useState('list');
+	const navigate = useNavigate();
+	const { pathname } = useLocation();
+
+	// Redirecting to the login page if the user is not authorized
+	useEffect(() => {
+		let userToken = localStorage.getItem('user');
+		if (!userToken && pathname !== '/login' && pathname !== '/registration') {
+			navigate('/login');
+		}
+		if (pathname === '/') {
+			if (!userToken) {
+				navigate('/login');
+			} else {
+				navigate('/courses');
+			}
+		}
+	}, [navigate, pathname]);
 
 	/**
 	 * Add a new course to the list
@@ -55,7 +75,7 @@ function App() {
 		setCoursesList(newCoursesList);
 
 		// Display the Courses list
-		setStep('list');
+		navigate('/courses');
 	};
 
 	/**
@@ -76,20 +96,36 @@ function App() {
 		<main>
 			<div className='container'>
 				<Header />
-				{step === 'list' && (
-					<Courses
-						coursesList={coursesList}
-						authorsList={authorsList}
-						onCreateCourseButtonClick={() => setStep('create')}
+				<Routes>
+					<Route path='/registration' element={<Registration />} />
+					<Route path='/login' element={<Login />} />
+					<Route
+						path='/courses'
+						element={
+							<Courses
+								coursesList={coursesList}
+								authorsList={authorsList}
+								onCreateCourseButtonClick={() => navigate('/courses/add')}
+							/>
+						}
 					/>
-				)}
-				{step === 'create' && (
-					<CreateCourse
-						authorsList={authorsList}
-						onCreateCourseButtonClick={addNewCourse}
-						onCreateAuthorButtonClick={addNewAuthor}
+					<Route
+						path='/courses/add'
+						element={
+							<CreateCourse
+								authorsList={authorsList}
+								onCreateCourseButtonClick={addNewCourse}
+								onCreateAuthorButtonClick={addNewAuthor}
+							/>
+						}
 					/>
-				)}
+					<Route
+						path='/courses/:courseId'
+						element={
+							<CourseInfo coursesList={coursesList} authorsList={authorsList} />
+						}
+					/>
+				</Routes>
 			</div>
 		</main>
 	);

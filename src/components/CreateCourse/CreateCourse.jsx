@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,17 +8,7 @@ import Input from '../../common/Input/Input';
 import Textarea from '../../common/Textarea/Textarea';
 
 import { pipeDuration } from '../../helpers/pipeDuration';
-
-/**
- * Validation
- */
-let validate = (rule, message) => {
-	if (rule) {
-		return true;
-	}
-	alert(message);
-	return false;
-};
+import { validation } from '../../helpers/validation';
 
 /**
  * Author with action button React component
@@ -53,7 +44,7 @@ function CreateCourse(props) {
 	 */
 	let createNewAuthor = () => {
 		// Validation
-		let nameValidation = validate(
+		let nameValidation = validation(
 			authorName.length >= 2,
 			'Author name length should be at least 2 characters'
 		);
@@ -76,6 +67,7 @@ function CreateCourse(props) {
 
 		// Clear the input
 		document.getElementById('createAuthorName').value = '';
+		setAuthorName('');
 
 		return newAuthor;
 	};
@@ -144,7 +136,7 @@ function CreateCourse(props) {
 		});
 
 		// Validation
-		let createCourseValidation = validate(
+		let createCourseValidation = validation(
 			title.length >= 2 &&
 				description.length >= 2 &&
 				durationNum > 0 &&
@@ -259,5 +251,18 @@ function CreateCourse(props) {
 		</div>
 	);
 }
+
+CreateCourse.propTypes = {
+	authorsList: PropTypes.arrayOf(PropTypes.object),
+	onCreateCourseButtonClick: PropTypes.func,
+	onCreateAuthorButtonClick: PropTypes.func,
+};
+
+AuthorWithButton.propTypes = {
+	name: PropTypes.string,
+	buttonClass: PropTypes.string,
+	buttonText: PropTypes.string,
+	onClick: PropTypes.func,
+};
 
 export default CreateCourse;

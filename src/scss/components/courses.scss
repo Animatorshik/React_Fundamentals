@@ -3,28 +3,35 @@
 .courses {
 	.course-card {
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
 		padding: 15px;
 		margin: 20px 0;
 		border: 1px solid $course-border-color;
 
-		@media all and (max-width: 767px) {
-			flex-direction: column;
+		@include media-breakpoint-up(md) {
+			flex-direction: row;
+		}
+
+		.left-side {
+			@include media-breakpoint-up(md) {
+				margin-right: 15px;
+			}
 		}
 
 		.right-side {
 			width: 100%;
 			min-width: 300px;
-			max-width: 300px;
+			margin-top: 10px;
+
+			@include media-breakpoint-up(md) {
+				margin-top: 0;
+				max-width: 300px;
+			}
 
 			.show-course {
 				margin-top: 10px;
 				text-align: center;
-			}
-
-			@media all and (max-width: 767px) {
-				margin-top: 10px;
-				max-width: unset;
 			}
 		}
 	}

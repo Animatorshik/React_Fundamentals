@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import Input from '../../../../common/Input/Input';
 import Button from '../../../../common/Button/Button';
 
@@ -28,5 +30,10 @@ function SearchBar(props) {
 		</div>
 	);
 }
+
+SearchBar.propTypes = {
+	onInputChange: PropTypes.func,
+	onButtonClick: PropTypes.func,
+};
 
 export default SearchBar;

@@ -1,0 +1,14 @@
+@import '../variables.scss';
+
+.sign-up-form {
+	border: 1px solid $border-color;
+	border-radius: 10px;
+	max-width: 600px;
+	padding: 20px;
+	margin: 30px auto;
+
+	@include media-breakpoint-up(md) {
+		padding: 50px;
+		margin: 50px auto;
+	}
+}

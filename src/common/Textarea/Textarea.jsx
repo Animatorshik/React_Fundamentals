@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 /**
  * Textarea React component
  */
@@ -14,5 +16,12 @@ function Textarea(props) {
 		</>
 	);
 }
+
+Textarea.propTypes = {
+	id: PropTypes.string,
+	labelText: PropTypes.string,
+	placeholdetText: PropTypes.string,
+	onChange: PropTypes.func,
+};
 
 export default Textarea;

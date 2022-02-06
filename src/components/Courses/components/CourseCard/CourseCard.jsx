@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import Button from '../../../../common/Button/Button';
 
 import { pipeDuration } from '../../../../helpers/pipeDuration';
@@ -34,6 +37,12 @@ function CardInformationItem(props) {
  * CourseCard React component
  */
 function CourseCard(props) {
+	const navigate = useNavigate();
+
+	let openCourse = () => {
+		navigate(`/courses/${props.id}`);
+	};
+
 	return (
 		<div className='course-card' id={props.id}>
 			<div className='left-side'>
@@ -57,11 +66,26 @@ function CourseCard(props) {
 					<Button
 						buttonClass='btn btn-outline-primary'
 						buttonText='Show course'
+						onClick={openCourse}
 					/>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+CardInformationItem.propTypes = {
+	name: PropTypes.string,
+	value: PropTypes.string,
+};
+
+CourseCard.propTypes = {
+	id: PropTypes.string,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	authors: PropTypes.string,
+	duration: PropTypes.number,
+	created: PropTypes.string,
+};
 
 export default CourseCard;

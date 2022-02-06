@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
@@ -81,6 +82,7 @@ function Courses(props) {
 					return (
 						<CourseCard
 							key={course.id}
+							id={course.id}
 							title={course.title}
 							description={course.description}
 							authors={getAuthorsNames(course.authors, props.authorsList)}
@@ -93,5 +95,11 @@ function Courses(props) {
 		</div>
 	);
 }
+
+Courses.propTypes = {
+	coursesList: PropTypes.arrayOf(PropTypes.object),
+	authorsList: PropTypes.arrayOf(PropTypes.object),
+	onCreateCourseButtonClick: PropTypes.func,
+};
 
 export default Courses;
