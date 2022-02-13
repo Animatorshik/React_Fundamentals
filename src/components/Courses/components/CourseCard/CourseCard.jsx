@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Button from '../../../../common/Button/Button';
 
 import { pipeDuration } from '../../../../helpers/pipeDuration';
 import { dateGenerator } from '../../../../helpers/dateGeneratop';
+import { deleteCourse } from '../../../../store/courses/actionCreators';
 
 /**
  * Crop the string and add '...' in the end
@@ -38,9 +40,15 @@ function CardInformationItem(props) {
  */
 function CourseCard(props) {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-	let openCourse = () => {
+	let callOpenCourse = () => {
 		navigate(`/courses/${props.id}`);
+	};
+
+	let callDeleteCourse = () => {
+		// Delete the course
+		dispatch(deleteCourse(props.id));
 	};
 
 	return (
@@ -66,7 +74,16 @@ function CourseCard(props) {
 					<Button
 						buttonClass='btn btn-outline-primary'
 						buttonText='Show course'
-						onClick={openCourse}
+						onClick={callOpenCourse}
+					/>
+					<Button
+						buttonClass='btn btn-outline-warning ms-2'
+						buttonText={<i className='bi bi-pencil-fill'></i>}
+					/>
+					<Button
+						buttonClass='btn btn-outline-danger ms-2'
+						buttonText={<i className='bi bi-trash-fill'></i>}
+						onClick={callDeleteCourse}
 					/>
 				</div>
 			</div>

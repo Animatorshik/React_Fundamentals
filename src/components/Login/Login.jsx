@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Input from '../../common/Input/Input';
@@ -6,13 +7,15 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { fetchSimple } from '../../helpers/fetchSimple';
+import { postLoginApi } from '../../servisces';
+import { userLogin } from '../../store/user/actionCreators';
 
 function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState([]);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	/**
 	 * Login User
@@ -24,12 +27,25 @@ function Login() {
 		);
 		if (!registrationValidation) return;
 
-		fetchSimple(`${process.env.REACT_APP_API}/login`, 'POST', {
+		let userData = {
 			email: email,
 			password: password,
-		}).then((data) => {
+		};
+
+		// It's because I can't recieve the name from API
+		let name = email;
+
+		postLoginApi(userData).then((data) => {
 			if (data.successful) {
 				localStorage.setItem('user', data.result);
+				dispatch(
+					userLogin({
+						isAuth: true,
+						name: name,
+						email: email,
+						token: data.result,
+					})
+				);
 				navigate('/courses');
 			} else {
 				setErrors(['Incorrect Email or Password.']);
