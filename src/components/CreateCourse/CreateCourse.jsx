@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +10,9 @@ import Textarea from '../../common/Textarea/Textarea';
 
 import { pipeDuration } from '../../helpers/pipeDuration';
 import { validation } from '../../helpers/validation';
+
+import { createAuthor } from '../../store/authors/actionCreators';
+import { createCourse } from '../../store/courses/actionCreators';
 
 /**
  * Author with action button React component
@@ -32,7 +36,7 @@ function AuthorWithButton(props) {
  * Create Course React component
  */
 function CreateCourse(props) {
-	const [authorsList, setAuthorsList] = useState(props.authorsList);
+	const [authorsList, setAuthorsList] = useState(props.authors);
 	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -59,6 +63,9 @@ function CreateCourse(props) {
 			name: authorName,
 		};
 
+		// Add new author to the store
+		props.createAuthor(newAuthor);
+
 		// Add this author to the Main list
 		newAuthorsList.push(newAuthor);
 
@@ -69,7 +76,7 @@ function CreateCourse(props) {
 		document.getElementById('createAuthorName').value = '';
 		setAuthorName('');
 
-		return newAuthor;
+		return true;
 	};
 
 	/**
@@ -153,7 +160,11 @@ function CreateCourse(props) {
 			duration: durationNum,
 			authors: authors,
 		};
-		return newCourse;
+
+		// Add new Course to the store
+		props.createCourse(newCourse);
+
+		return true;
 	};
 
 	return (
@@ -198,7 +209,7 @@ function CreateCourse(props) {
 						<Button
 							buttonClass='btn btn-outline-success mt-3'
 							buttonText='Create author'
-							onClick={() => props.onCreateAuthorButtonClick(createNewAuthor())}
+							onClick={createNewAuthor}
 						/>
 					</div>
 					<div className='section duration mt-4'>
@@ -252,8 +263,19 @@ function CreateCourse(props) {
 	);
 }
 
+const mapStateToProps = (state) => {
+	return {
+		authors: state.authors,
+	};
+};
+
+const mapDispatchToProps = {
+	createAuthor,
+	createCourse,
+};
+
 CreateCourse.propTypes = {
-	authorsList: PropTypes.arrayOf(PropTypes.object),
+	authors: PropTypes.arrayOf(PropTypes.object),
 	onCreateCourseButtonClick: PropTypes.func,
 	onCreateAuthorButtonClick: PropTypes.func,
 };
@@ -265,4 +287,4 @@ AuthorWithButton.propTypes = {
 	onClick: PropTypes.func,
 };
 
-export default CreateCourse;
+export default connect(mapStateToProps, mapDispatchToProps)(CreateCourse);

@@ -17,7 +17,7 @@ function Button(props) {
 
 Button.propTypes = {
 	buttonClass: PropTypes.string,
-	buttonText: PropTypes.string,
+	buttonText: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 	onClick: PropTypes.func,
 };
 

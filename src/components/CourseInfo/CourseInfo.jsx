@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { pipeDuration } from '../../helpers/pipeDuration';
@@ -13,7 +14,7 @@ function CourseInfo(props) {
 	const navigate = useNavigate();
 	const courseId = params.courseId;
 
-	const course = props.coursesList.find((item) => item.id === courseId);
+	const course = props.courses.find((item) => item.id === courseId);
 
 	// If course is not exist, redirect to the Courses List
 	useEffect(() => {
@@ -28,8 +29,8 @@ function CourseInfo(props) {
 	 * @param {string} authorId
 	 * @returns {string}
 	 */
-	let getAuthorName = (authorId) => {
-		let author = props.authorsList.find((item) => item.id === authorId);
+	const getAuthorName = (authorId) => {
+		let author = props.authors.find((item) => item.id === authorId);
 		return author.name;
 	};
 
@@ -72,9 +73,14 @@ function CourseInfo(props) {
 	);
 }
 
+const mapStateToProps = (state) => ({
+	courses: state.courses,
+	authors: state.authors,
+});
+
 CourseInfo.propTypes = {
-	coursesList: PropTypes.arrayOf(PropTypes.object),
-	authorsList: PropTypes.arrayOf(PropTypes.object),
+	courses: PropTypes.arrayOf(PropTypes.object),
+	authors: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default CourseInfo;
+export default connect(mapStateToProps)(CourseInfo);

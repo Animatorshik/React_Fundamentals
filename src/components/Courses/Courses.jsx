@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
 import SearchBar from './components/SearchBar/SearchBar';
+
+import { getCoursesApi, getAuthorsApi } from '../../servisces';
+import { setCourses } from '../../store/courses/actionCreators';
+import { setAuthors } from '../../store/authors/actionCreators';
 
 /**
  * Get Authors Names by IDs and join them in one string
@@ -24,9 +29,23 @@ let getAuthorsNames = (authorIDs, authorsList) => {
  * Courses React component
  */
 function Courses(props) {
-	const [coursesList, setCoursesList] = useState(props.coursesList);
+	const [coursesList, setCoursesList] = useState(props.courses);
 	const [searchValue, setSearchValue] = useState('');
-	const saveCoursesList = [...props.coursesList];
+	const dispatch = useDispatch();
+
+	// Default Authors and Courses
+	useEffect(() => {
+		getAuthorsApi().then((data) => {
+			if (data.successful && !props.authors.length) {
+				dispatch(setAuthors(data.result));
+			}
+			getCoursesApi().then((data) => {
+				if (data.successful && !coursesList.length) {
+					dispatch(setCourses(data.result));
+				}
+			});
+		});
+	}, []);
 
 	/**
 	 * Search courses by Title or ID
@@ -56,9 +75,9 @@ function Courses(props) {
 	 */
 	useEffect(() => {
 		if (!searchValue) {
-			setCoursesList(saveCoursesList);
+			setCoursesList(props.courses);
 		}
-	}, [searchValue]);
+	}, [searchValue, props.courses]);
 
 	return (
 		<div className='courses-wrapper'>
@@ -85,7 +104,7 @@ function Courses(props) {
 							id={course.id}
 							title={course.title}
 							description={course.description}
-							authors={getAuthorsNames(course.authors, props.authorsList)}
+							authors={getAuthorsNames(course.authors, props.authors)}
 							duration={course.duration}
 							created={course.creationDate}
 						/>
@@ -96,10 +115,18 @@ function Courses(props) {
 	);
 }
 
+// Map store state to props
+const mapStateToProps = (state) => {
+	return {
+		courses: state.courses,
+		authors: state.authors,
+	};
+};
+
 Courses.propTypes = {
-	coursesList: PropTypes.arrayOf(PropTypes.object),
-	authorsList: PropTypes.arrayOf(PropTypes.object),
+	courses: PropTypes.arrayOf(PropTypes.object),
+	authors: PropTypes.arrayOf(PropTypes.object),
 	onCreateCourseButtonClick: PropTypes.func,
 };
 
-export default Courses;
+export default connect(mapStateToProps)(Courses);

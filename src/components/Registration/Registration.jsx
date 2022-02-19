@@ -6,7 +6,7 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { fetchSimple } from '../../helpers/fetchSimple';
+import { postRegisterApi } from '../../servisces';
 
 function Registration() {
 	const [name, setName] = useState('');
@@ -25,11 +25,13 @@ function Registration() {
 		);
 		if (!registrationValidation) return;
 
-		fetchSimple(`${process.env.REACT_APP_API}/register`, 'POST', {
+		let userData = {
 			name: name,
 			email: email,
 			password: password,
-		}).then((data) => {
+		};
+
+		postRegisterApi(userData).then((data) => {
 			if (data.successful) {
 				navigate('/login');
 			} else {
