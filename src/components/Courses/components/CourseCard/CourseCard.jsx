@@ -14,7 +14,7 @@ import { deleteCourse } from '../../../../store/courses/actionCreators';
  * @param {string} stockString
  * @returns {string}
  */
-let getCroppedString = (stockString) => {
+const getCroppedString = (stockString) => {
 	const maxLength = 27;
 
 	if (stockString.length > maxLength) {
@@ -42,11 +42,11 @@ function CourseCard(props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	let callOpenCourse = () => {
+	const callOpenCourse = () => {
 		navigate(`/courses/${props.id}`);
 	};
 
-	let callDeleteCourse = () => {
+	const callDeleteCourse = () => {
 		// Delete the course
 		dispatch(deleteCourse(props.id));
 	};

@@ -29,7 +29,7 @@ function CourseInfo(props) {
 	 * @param {string} authorId
 	 * @returns {string}
 	 */
-	let getAuthorName = (authorId) => {
+	const getAuthorName = (authorId) => {
 		let author = props.authors.find((item) => item.id === authorId);
 		return author.name;
 	};
@@ -73,12 +73,10 @@ function CourseInfo(props) {
 	);
 }
 
-const mapStateToProps = (state) => {
-	return {
-		courses: state.courses,
-		authors: state.authors,
-	};
-};
+const mapStateToProps = (state) => ({
+	courses: state.courses,
+	authors: state.authors,
+});
 
 CourseInfo.propTypes = {
 	courses: PropTypes.arrayOf(PropTypes.object),
