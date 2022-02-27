@@ -5,6 +5,5 @@
  * @returns {string} m.d.yyyy
  */
 export function dateGenerator(stockDate) {
-	let date = new Date(stockDate);
-	return `${date.getMonth() + 1}.${date.getDate()}.${date.getFullYear()}`;
+	return stockDate.replace(/\//g, '.');
 }

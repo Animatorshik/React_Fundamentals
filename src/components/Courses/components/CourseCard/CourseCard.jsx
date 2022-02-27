@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Button from '../../../../common/Button/Button';
@@ -7,6 +7,9 @@ import Button from '../../../../common/Button/Button';
 import { pipeDuration } from '../../../../helpers/pipeDuration';
 import { dateGenerator } from '../../../../helpers/dateGeneratop';
 import { deleteCourse } from '../../../../store/courses/actionCreators';
+import { getUser } from '../../../../store/selectors';
+import { ADMIN } from '../../../../roles/roles';
+import { ROUTES } from '../../../../routes/routes';
 
 /**
  * Crop the string and add '...' in the end
@@ -41,9 +44,14 @@ function CardInformationItem(props) {
 function CourseCard(props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const user = useSelector(getUser);
 
 	const callOpenCourse = () => {
-		navigate(`/courses/${props.id}`);
+		navigate(ROUTES.COURSE(props.id));
+	};
+
+	const callEditCourse = () => {
+		navigate(ROUTES.COURSE_UPDATE(props.id));
 	};
 
 	const callDeleteCourse = () => {
@@ -76,15 +84,20 @@ function CourseCard(props) {
 						buttonText='Show course'
 						onClick={callOpenCourse}
 					/>
-					<Button
-						buttonClass='btn btn-outline-warning ms-2'
-						buttonText={<i className='bi bi-pencil-fill'></i>}
-					/>
-					<Button
-						buttonClass='btn btn-outline-danger ms-2'
-						buttonText={<i className='bi bi-trash-fill'></i>}
-						onClick={callDeleteCourse}
-					/>
+					{user.role === ADMIN && (
+						<Button
+							buttonClass='btn btn-outline-warning ms-2'
+							buttonText={<i className='bi bi-pencil-fill'></i>}
+							onClick={callEditCourse}
+						/>
+					)}
+					{user.role === ADMIN && (
+						<Button
+							buttonClass='btn btn-outline-danger ms-2'
+							buttonText={<i className='bi bi-trash-fill'></i>}
+							onClick={callDeleteCourse}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

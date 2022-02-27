@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import { pipeDuration } from '../../helpers/pipeDuration';
 import { dateGenerator } from '../../helpers/dateGeneratop';
+import { ROUTES } from '../../routes/routes';
 
 /**
  * Course Info React component
@@ -19,7 +20,7 @@ function CourseInfo(props) {
 	// If course is not exist, redirect to the Courses List
 	useEffect(() => {
 		if (!course) {
-			navigate('/courses');
+			navigate(ROUTES.COURSES);
 		}
 	}, [course, navigate]);
 
@@ -39,7 +40,7 @@ function CourseInfo(props) {
 			{!!course && (
 				<div className='course-wrapper'>
 					<div className='back-link mt-3'>
-						<Link to='/courses'>Back to courses</Link>
+						<Link to={ROUTES.COURSES}>Back to courses</Link>
 					</div>
 					<h1 className='my-5 text-center'>{course.title}</h1>
 					<div className='row'>

@@ -1,66 +1,80 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
 import Login from './components/Login/Login';
 import Courses from './components/Courses/Courses';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseForm from './components/CourseForm/CourseForm';
 import CourseInfo from './components/CourseInfo/CourseInfo';
+import PrivateRoute from './routes/helpers/PrivateRoute';
+import { ROUTES } from './routes/routes';
+import { ADMIN } from './roles/roles';
 
 function App() {
 	const navigate = useNavigate();
-	const { pathname } = useLocation();
-
-	// Redirecting to the login page if the user is not authorized
-	useEffect(() => {
-		let userToken = localStorage.getItem('user');
-		if (!userToken && pathname !== '/login' && pathname !== '/registration') {
-			navigate('/login');
-		}
-		if (pathname === '/') {
-			if (!userToken) {
-				navigate('/login');
-			} else {
-				navigate('/courses');
-			}
-		}
-	}, [navigate, pathname]);
 
 	/**
 	 * Navigate to the Courses page
 	 *
 	 * @param {boolean} courseCreatedSuccess
 	 */
-	let navigateToCourses = (courseCreatedSuccess) => {
+	const navigateToCourses = (courseCreatedSuccess) => {
 		if (!courseCreatedSuccess) return;
 
 		// Navigate to the Courses list
-		navigate('/courses');
+		navigate(ROUTES.COURSES);
 	};
 
 	return (
-		<main>
+		<main className='mb-5'>
 			<div className='container'>
 				<Header />
 				<Routes>
-					<Route path='/registration' element={<Registration />} />
-					<Route path='/login' element={<Login />} />
+					<Route path={ROUTES.REGISTRATION} element={<Registration />} />
+					<Route path={ROUTES.LOGIN} element={<Login />} />
 					<Route
-						path='/courses'
+						path={ROUTES.HOME}
 						element={
-							<Courses
-								onCreateCourseButtonClick={() => navigate('/courses/add')}
-							/>
+							<PrivateRoute>
+								<Navigate to={ROUTES.COURSES} />
+							</PrivateRoute>
 						}
 					/>
 					<Route
-						path='/courses/add'
+						path={ROUTES.COURSES}
 						element={
-							<CreateCourse onCreateCourseButtonClick={navigateToCourses} />
+							<PrivateRoute>
+								<Courses
+									onCreateCourseButtonClick={() => navigate(ROUTES.COURSE_ADD)}
+								/>
+							</PrivateRoute>
 						}
 					/>
-					<Route path='/courses/:courseId' element={<CourseInfo />} />
+					<Route
+						path={ROUTES.COURSE_ADD}
+						element={
+							<PrivateRoute roles={[ADMIN]}>
+								<CourseForm onCreateCourseButtonClick={navigateToCourses} />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path={ROUTES.COURSE_UPDATE()}
+						element={
+							<PrivateRoute roles={[ADMIN]}>
+								<CourseForm onUpdateCourseButtonClick={navigateToCourses} />
+							</PrivateRoute>
+						}
+					/>
+					<Route
+						path={ROUTES.COURSE()}
+						element={
+							<PrivateRoute>
+								<CourseInfo />
+							</PrivateRoute>
+						}
+					/>
 				</Routes>
 			</div>
 		</main>

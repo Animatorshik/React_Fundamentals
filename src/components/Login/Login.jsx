@@ -8,7 +8,8 @@ import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
 import { postLoginApi } from '../../servisces';
-import { userLogin } from '../../store/user/actionCreators';
+import { userLogin, userRole } from '../../store/user/actionCreators';
+import { ROUTES } from '../../routes/routes';
 
 function Login() {
 	const [email, setEmail] = useState('');
@@ -44,9 +45,11 @@ function Login() {
 						name: name,
 						email: email,
 						token: data.result,
+						role: '',
 					})
 				);
-				navigate('/courses');
+				dispatch(userRole());
+				navigate(ROUTES.COURSES);
 			} else {
 				setErrors(['Incorrect Email or Password.']);
 			}

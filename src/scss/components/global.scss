@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.back-link {
+	a {
+		text-decoration: none;
+
+		&::before {
+			content: '\2190';
+			margin-right: 5px;
+		}
+	}
+}
