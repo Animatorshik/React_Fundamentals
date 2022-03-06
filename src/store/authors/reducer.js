@@ -6,7 +6,7 @@ import {
 } from './actionTypes';
 
 const authorsInitialState = [];
-let authorIndex = null;
+const authorInCourse = 'inCourse';
 
 export const authorsReducer = (state = authorsInitialState, action) => {
 	switch (action.type) {
@@ -17,19 +17,15 @@ export const authorsReducer = (state = authorsInitialState, action) => {
 			return state.concat(action.payload);
 
 		case MOVE_AUTHOR_TO_COURSE:
-			authorIndex = state.findIndex((el) => el.id === action.payload);
-			if (authorIndex !== -1) {
-				let newState = state.slice();
-				newState[authorIndex]['inCourse'] = true;
-				return newState;
-			}
-			return state;
-
 		case MOVE_AUTHOR_FROM_COURSE:
-			authorIndex = state.findIndex((el) => el.id === action.payload);
+			const authorIndex = state.findIndex((el) => el.id === action.payload);
 			if (authorIndex !== -1) {
 				let newState = state.slice();
-				delete newState[authorIndex]['inCourse'];
+				if (action.type === MOVE_AUTHOR_TO_COURSE) {
+					newState[authorIndex][authorInCourse] = true;
+				} else {
+					delete newState[authorIndex][authorInCourse];
+				}
 				return newState;
 			}
 			return state;

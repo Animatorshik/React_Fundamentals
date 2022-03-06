@@ -82,10 +82,10 @@ function CreateCourse(props) {
 	 * Create a new course
 	 */
 	const createNewCourse = () => {
-		let date = new Date();
-		let creationDate = new Intl.DateTimeFormat('en-GB').format(date);
-		let durationNum = Number(duration);
-		let authors = [];
+		const date = new Date();
+		const creationDate = new Intl.DateTimeFormat('en-GB').format(date);
+		const durationNum = Number(duration);
+		const authors = [];
 		separateAuthorsList.course.forEach((author) => {
 			authors.push(author.id);
 		});
@@ -118,14 +118,14 @@ function CreateCourse(props) {
 	 * Update the course
 	 */
 	const updateCourse = () => {
-		let durationNum = Number(duration);
-		let authors = [];
+		const durationNum = Number(duration);
+		const authors = [];
 		separateAuthorsList.course.forEach((author) => {
 			authors.push(author.id);
 		});
 
 		// Validation
-		let updateCourseValidation = validation(
+		const updateCourseValidation = validation(
 			title.length >= 2 &&
 				description.length >= 2 &&
 				durationNum > 0 &&
@@ -134,7 +134,7 @@ function CreateCourse(props) {
 		);
 		if (!updateCourseValidation) return;
 
-		let updCourse = {
+		const updCourse = {
 			id: course.id,
 			title: title,
 			description: description,
@@ -202,14 +202,13 @@ function CreateCourse(props) {
 					/>
 				</div>
 				<div className='col-5 d-flex align-items-end justify-content-end'>
-					{!course && (
+					{!course ? (
 						<Button
 							buttonClass='btn btn-outline-success'
 							buttonText='Create course'
 							onClick={() => props.onCreateCourseButtonClick(createNewCourse())}
 						/>
-					)}
-					{!!course && (
+					) : (
 						<Button
 							buttonClass='btn btn-outline-warning'
 							buttonText='Update course'

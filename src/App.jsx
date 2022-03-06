@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import Header from './components/Header/Header';
 import Registration from './components/Registration/Registration';
@@ -35,11 +35,7 @@ function App() {
 					<Route path={ROUTES.LOGIN} element={<Login />} />
 					<Route
 						path={ROUTES.HOME}
-						element={
-							<PrivateRoute>
-								<Navigate to={ROUTES.COURSES} />
-							</PrivateRoute>
-						}
+						element={<PrivateRoute path={ROUTES.COURSES} />}
 					/>
 					<Route
 						path={ROUTES.COURSES}

@@ -18,7 +18,11 @@ function PrivateRoute(props) {
 	const isSuitableRole = !props.roles || props.roles.includes(user.role);
 
 	if (userToken && isSuitableRole) {
-		return props.children;
+		if (props.path) {
+			return <Navigate to={props.path} />;
+		} else {
+			return props.children;
+		}
 	} else if (userToken) {
 		return <Navigate to={ROUTES.COURSES} />;
 	} else {
