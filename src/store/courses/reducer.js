@@ -6,7 +6,8 @@ import {
 } from './actionTypes';
 
 const coursesInitialState = [];
-let courseIndex = null;
+
+let courseIndex;
 
 export const coursesReducer = (state = coursesInitialState, action) => {
 	switch (action.type) {

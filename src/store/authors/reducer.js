@@ -8,6 +8,8 @@ import {
 const authorsInitialState = [];
 const authorInCourse = 'inCourse';
 
+let authorIndex;
+
 export const authorsReducer = (state = authorsInitialState, action) => {
 	switch (action.type) {
 		case SET_AUTHORS:
@@ -17,15 +19,19 @@ export const authorsReducer = (state = authorsInitialState, action) => {
 			return state.concat(action.payload);
 
 		case MOVE_AUTHOR_TO_COURSE:
-		case MOVE_AUTHOR_FROM_COURSE:
-			const authorIndex = state.findIndex((el) => el.id === action.payload);
+			authorIndex = state.findIndex((el) => el.id === action.payload);
 			if (authorIndex !== -1) {
 				let newState = state.slice();
-				if (action.type === MOVE_AUTHOR_TO_COURSE) {
-					newState[authorIndex][authorInCourse] = true;
-				} else {
-					delete newState[authorIndex][authorInCourse];
-				}
+				newState[authorIndex][authorInCourse] = true;
+				return newState;
+			}
+			return state;
+
+		case MOVE_AUTHOR_FROM_COURSE:
+			authorIndex = state.findIndex((el) => el.id === action.payload);
+			if (authorIndex !== -1) {
+				let newState = state.slice();
+				delete newState[authorIndex][authorInCourse];
 				return newState;
 			}
 			return state;
