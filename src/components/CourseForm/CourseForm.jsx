@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import { v4 as uuidv4 } from 'uuid';
+import { Link, useParams } from 'react-router-dom';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -11,8 +10,13 @@ import Textarea from '../../common/Textarea/Textarea';
 import { pipeDuration } from '../../helpers/pipeDuration';
 import { validation } from '../../helpers/validation';
 
-import { createAuthor } from '../../store/authors/actionCreators';
-import { createCourse } from '../../store/courses/actionCreators';
+import {
+	createAuthor,
+	moveAuthorToCourse,
+	moveAuthorFromCourse,
+} from '../../store/authors/actionCreators';
+import { createCourse, updateCourse } from '../../store/courses/actionCreators';
+import { ROUTES } from '../../routes/routes';
 
 /**
  * Author with action button React component
@@ -36,8 +40,14 @@ function AuthorWithButton(props) {
  * Create Course React component
  */
 function CreateCourse(props) {
-	const [authorsList, setAuthorsList] = useState(props.authors);
-	const [courseAuthorsList, setCourseAuthorsList] = useState([]);
+	const params = useParams();
+	const courseId = params.courseId;
+	const course = props.courses.find((item) => item.id === courseId);
+
+	const [separateAuthorsList, setSeparateAuthorsList] = useState({
+		free: props.authors,
+		course: [],
+	});
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState(0);
@@ -46,7 +56,7 @@ function CreateCourse(props) {
 	/**
 	 * Create a new author
 	 */
-	let createNewAuthor = () => {
+	const createNewAuthor = () => {
 		// Validation
 		let nameValidation = validation(
 			authorName.length >= 2,
@@ -54,91 +64,29 @@ function CreateCourse(props) {
 		);
 		if (!nameValidation) return;
 
-		// Copy the Main Authors list
-		let newAuthorsList = authorsList.slice();
-
 		// New author
 		let newAuthor = {
-			id: uuidv4(),
 			name: authorName,
 		};
 
-		// Add new author to the store
+		// Add new author to the store and server
 		props.createAuthor(newAuthor);
 
-		// Add this author to the Main list
-		newAuthorsList.push(newAuthor);
-
-		// Set new Main Authors list
-		setAuthorsList(newAuthorsList);
-
 		// Clear the input
-		document.getElementById('createAuthorName').value = '';
 		setAuthorName('');
 
 		return true;
 	};
 
 	/**
-	 * Add author to the course or remove
-	 *
-	 * @param {string} authorId
-	 * @param {boolean} moveToCourse
-	 */
-	let moveAuthor = (authorId, moveToCourse) => {
-		let aurhorIndex = 0;
-		let newAuthorsList = [];
-
-		if (moveToCourse) {
-			aurhorIndex = authorsList.findIndex((el) => el.id === authorId);
-
-			// Copy the Course Authors list
-			let newCourseAuthorsList = courseAuthorsList.slice();
-
-			// Add this author to the Course list
-			newCourseAuthorsList.push(authorsList[aurhorIndex]);
-
-			// Set new Course Authors list
-			setCourseAuthorsList(newCourseAuthorsList);
-
-			// Copy the Main Authors list
-			newAuthorsList = authorsList.slice();
-
-			// Remove this author from the Main list
-			newAuthorsList.splice(aurhorIndex, 1);
-		} else {
-			aurhorIndex = courseAuthorsList.findIndex((el) => el.id === authorId);
-
-			// Copy the Course Authors list
-			let newCourseAuthorsList = courseAuthorsList.slice();
-
-			// Remove this author from the Course list
-			newCourseAuthorsList.splice(aurhorIndex, 1);
-
-			// Set new Course Authors list
-			setCourseAuthorsList(newCourseAuthorsList);
-
-			// Copy the Main Authors list
-			newAuthorsList = authorsList.slice();
-
-			// Add this author to the Main list
-			newAuthorsList.push(courseAuthorsList[aurhorIndex]);
-		}
-
-		// Set new Main Authors list
-		setAuthorsList(newAuthorsList);
-	};
-
-	/**
 	 * Create a new course
 	 */
-	let createNewCourse = () => {
-		let id = uuidv4();
-		let date = new Date();
-		let creationDate = date.toLocaleDateString('en-US');
-		let durationNum = Number(duration);
-		let authors = [];
-		courseAuthorsList.forEach((author) => {
+	const createNewCourse = () => {
+		const date = new Date();
+		const creationDate = new Intl.DateTimeFormat('en-GB').format(date);
+		const durationNum = Number(duration);
+		const authors = [];
+		separateAuthorsList.course.forEach((author) => {
 			authors.push(author.id);
 		});
 
@@ -153,7 +101,6 @@ function CreateCourse(props) {
 		if (!createCourseValidation) return;
 
 		let newCourse = {
-			id: id,
 			title: title,
 			description: description,
 			creationDate: creationDate,
@@ -167,8 +114,82 @@ function CreateCourse(props) {
 		return true;
 	};
 
+	/**
+	 * Update the course
+	 */
+	const updateCourse = () => {
+		const durationNum = Number(duration);
+		const authors = [];
+		separateAuthorsList.course.forEach((author) => {
+			authors.push(author.id);
+		});
+
+		// Validation
+		const updateCourseValidation = validation(
+			title.length >= 2 &&
+				description.length >= 2 &&
+				durationNum > 0 &&
+				authors.length,
+			'Please, fill in all fields'
+		);
+		if (!updateCourseValidation) return;
+
+		const updCourse = {
+			id: course.id,
+			title: title,
+			description: description,
+			creationDate: course.creationDate,
+			duration: durationNum,
+			authors: authors,
+		};
+
+		props.updateCourse(updCourse);
+		return true;
+	};
+
+	// Default course values on edit
+	useEffect(() => {
+		if (!!course) {
+			// Edit course
+			setTitle(course.title);
+			setDescription(course.description);
+			setDuration(course.duration);
+
+			course.authors.forEach((authorId) => {
+				props.moveAuthorToCourse(authorId);
+			});
+		} else {
+			// Create course
+			// Mark all authors as free
+			props.authors.forEach((author) => {
+				if (author.inCourse) {
+					props.moveAuthorFromCourse(author.id);
+				}
+			});
+		}
+	}, [course]);
+
+	// Move authors
+	useEffect(() => {
+		let freeAuthors = [];
+		let courseAuthors = [];
+
+		props.authors.forEach((author) => {
+			if (author.inCourse) {
+				courseAuthors.push(author);
+			} else {
+				freeAuthors.push(author);
+			}
+		});
+
+		setSeparateAuthorsList({ free: freeAuthors, course: courseAuthors });
+	}, [props.authors]);
+
 	return (
 		<div className='create-course-wrapper'>
+			<div className='back-link mt-3'>
+				<Link to={ROUTES.COURSES}>Cancel</Link>
+			</div>
 			<div className='row mt-4'>
 				<div className='col-7'>
 					<Input
@@ -176,15 +197,24 @@ function CreateCourse(props) {
 						id='createCourseTitle'
 						placeholdetText='Enter title...'
 						labelText='Title'
+						value={title}
 						onChange={(value) => setTitle(value)}
 					/>
 				</div>
 				<div className='col-5 d-flex align-items-end justify-content-end'>
-					<Button
-						buttonClass='btn btn-outline-primary'
-						buttonText='Create course'
-						onClick={() => props.onCreateCourseButtonClick(createNewCourse())}
-					/>
+					{!course ? (
+						<Button
+							buttonClass='btn btn-outline-success'
+							buttonText='Create course'
+							onClick={() => props.onCreateCourseButtonClick(createNewCourse())}
+						/>
+					) : (
+						<Button
+							buttonClass='btn btn-outline-warning'
+							buttonText='Update course'
+							onClick={() => props.onUpdateCourseButtonClick(updateCourse())}
+						/>
+					)}
 				</div>
 			</div>
 			<div className='mt-4'>
@@ -192,6 +222,7 @@ function CreateCourse(props) {
 					id='createCourseDescription'
 					placeholdetText='Enter description'
 					labelText='Description'
+					value={description}
 					onChange={(value) => setDescription(value)}
 				/>
 			</div>
@@ -204,6 +235,7 @@ function CreateCourse(props) {
 							id='createAuthorName'
 							placeholdetText='Enter author name...'
 							labelText='Author name'
+							value={authorName}
 							onChange={(value) => setAuthorName(value)}
 						/>
 						<Button
@@ -219,6 +251,7 @@ function CreateCourse(props) {
 							id='createCourseDuration'
 							placeholdetText='Enter duration in minutes...'
 							labelText='Duration'
+							value={duration ? String(duration) : ''}
 							onChange={(value) => setDuration(value)}
 						/>
 						<div className='fs-3'>Duration: {pipeDuration(duration)}</div>
@@ -228,14 +261,14 @@ function CreateCourse(props) {
 					<div className='section authors mt-4'>
 						<div className='fs-4 text-center'>Authors</div>
 						<div className='authors'>
-							{authorsList.map((author) => {
+							{separateAuthorsList.free.map((author) => {
 								return (
 									<AuthorWithButton
 										key={author.id}
 										name={author.name}
 										buttonText='Add author'
 										buttonClass='btn btn-outline-primary btn-sm'
-										onClick={() => moveAuthor(author.id, true)}
+										onClick={() => props.moveAuthorToCourse(author.id)}
 									/>
 								);
 							})}
@@ -244,14 +277,14 @@ function CreateCourse(props) {
 					<div className='section course-authors mt-4'>
 						<div className='fs-4 text-center'>Course authors</div>
 						<div className='course-authors'>
-							{courseAuthorsList.map((author) => {
+							{separateAuthorsList.course.map((author) => {
 								return (
 									<AuthorWithButton
 										key={author.id}
 										name={author.name}
 										buttonText='Delete author'
 										buttonClass='btn btn-outline-danger btn-sm'
-										onClick={() => moveAuthor(author.id, false)}
+										onClick={() => props.moveAuthorFromCourse(author.id)}
 									/>
 								);
 							})}
@@ -263,20 +296,23 @@ function CreateCourse(props) {
 	);
 }
 
-const mapStateToProps = (state) => {
-	return {
-		authors: state.authors,
-	};
-};
+const mapStateToProps = (state) => ({
+	courses: state.courses,
+	authors: state.authors,
+});
 
 const mapDispatchToProps = {
 	createAuthor,
+	moveAuthorToCourse,
+	moveAuthorFromCourse,
 	createCourse,
+	updateCourse,
 };
 
 CreateCourse.propTypes = {
 	authors: PropTypes.arrayOf(PropTypes.object),
 	onCreateCourseButtonClick: PropTypes.func,
+	onUpdateCourseButtonClick: PropTypes.func,
 	onCreateAuthorButtonClick: PropTypes.func,
 };
 

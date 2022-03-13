@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CourseCard from './components/CourseCard/CourseCard';
@@ -9,6 +9,8 @@ import SearchBar from './components/SearchBar/SearchBar';
 import { getCoursesApi, getAuthorsApi } from '../../servisces';
 import { setCourses } from '../../store/courses/actionCreators';
 import { setAuthors } from '../../store/authors/actionCreators';
+import { getUser } from '../../store/selectors';
+import { ADMIN } from '../../roles/roles';
 
 /**
  * Get Authors Names by IDs and join them in one string
@@ -32,6 +34,7 @@ function Courses(props) {
 	const [coursesList, setCoursesList] = useState(props.courses);
 	const [searchValue, setSearchValue] = useState('');
 	const dispatch = useDispatch();
+	const user = useSelector(getUser);
 
 	// Default Authors and Courses
 	useEffect(() => {
@@ -89,11 +92,13 @@ function Courses(props) {
 					/>
 				</div>
 				<div className='col-lg-5 text-end'>
-					<Button
-						buttonClass='btn btn-outline-success'
-						buttonText='Add new course'
-						onClick={props.onCreateCourseButtonClick}
-					/>
+					{user.role === ADMIN && (
+						<Button
+							buttonClass='btn btn-outline-success'
+							buttonText='Add new course'
+							onClick={props.onCreateCourseButtonClick}
+						/>
+					)}
 				</div>
 			</div>
 			<div className='courses'>

@@ -15,8 +15,7 @@ function Header() {
 	const user = useSelector(getUser);
 	const dispatch = useDispatch();
 
-	let logout = () => {
-		localStorage.removeItem('user');
+	const logout = () => {
 		dispatch(userLogout());
 		navigate('/login');
 	};
