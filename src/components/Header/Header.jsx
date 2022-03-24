@@ -5,6 +5,7 @@ import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
 import { getUser } from '../../store/selectors';
 import { userLogout } from '../../store/user/actionCreators';
+import { ROUTES } from '../../routes/routes';
 
 /**
  * Header React component
@@ -17,13 +18,13 @@ function Header() {
 
 	const logout = () => {
 		dispatch(userLogout());
-		navigate('/login');
+		navigate(ROUTES.LOGIN);
 	};
 
 	return (
 		<header>
 			<Logo />
-			{pathname !== '/login' && pathname !== '/registration' && (
+			{pathname !== ROUTES.LOGIN && pathname !== ROUTES.REGISTRATION && (
 				<div className='user'>
 					<div className='d-inline user-name me-3'>{user.name}</div>
 					<Button
