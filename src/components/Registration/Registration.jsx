@@ -7,6 +7,7 @@ import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
 import { postRegisterApi } from '../../servisces';
+import { ROUTES } from '../../routes/routes';
 
 function Registration() {
 	const [name, setName] = useState('');
@@ -33,7 +34,7 @@ function Registration() {
 
 		postRegisterApi(userData).then((data) => {
 			if (data.successful) {
-				navigate('/login');
+				navigate(ROUTES.LOGIN);
 			} else {
 				setErrors(data.errors);
 			}
@@ -86,7 +87,7 @@ function Registration() {
 					/>
 				</div>
 				<p className='small'>
-					If you have an account, you can <Link to='/login'>Login</Link>
+					If you have an account, you can <Link to={ROUTES.LOGIN}>Login</Link>
 				</p>
 			</form>
 		</div>

@@ -94,7 +94,7 @@ function Login() {
 				</div>
 				<p className='small'>
 					If you don't have an account, you can{' '}
-					<Link to='/registration'>Register</Link>
+					<Link to={ROUTES.REGISTRATION}>Register</Link>
 				</p>
 			</form>
 		</div>
