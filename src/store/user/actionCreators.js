@@ -1,4 +1,4 @@
-import { getRoleApi } from '../../servisces';
+import { deleteLogoutApi, getRoleApi } from '../../servisces';
 import { USER_LOGIN, USER_LOGOUT, USER_ROLE } from './actionTypes';
 
 export function userLogin(user) {
@@ -22,7 +22,7 @@ export function userRole() {
 
 export function userLogout() {
 	return async (dispatch) => {
-		const response = await getRoleApi();
+		const response = await deleteLogoutApi();
 		if (response.successful) {
 			dispatch({
 				type: USER_LOGOUT,
