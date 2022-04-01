@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 
 import { coursesReducer } from '../courses/reducer';
-import { SET_COURSES, UPDATE_COURSE } from '../courses/actionTypes';
+import { GET_COURSES, UPDATE_COURSE } from '../courses/actionTypes';
 
 // Default values
 const mockedDefaultCourse = {
@@ -25,7 +25,7 @@ describe('Courses Reducer', () => {
 		expect(newState).toEqual(mockedState);
 	});
 
-	it('should handle SET_COURSES and returns new state', () => {
+	it('should handle GET_COURSES and returns new state', () => {
 		const mockedCourse = {
 			title: 'New course',
 			description: 'description',
@@ -35,7 +35,7 @@ describe('Courses Reducer', () => {
 			id: '66cc289e-6de9-49b2-9ca7-8b4f409d6467',
 		};
 
-		const action = { type: SET_COURSES, payload: mockedCourse };
+		const action = { type: GET_COURSES, payload: mockedCourse };
 		const newState = coursesReducer(mockedState, action);
 		expect(newState).toEqual(mockedCourse);
 	});

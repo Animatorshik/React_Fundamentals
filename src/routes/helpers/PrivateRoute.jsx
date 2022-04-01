@@ -7,7 +7,7 @@ import { getUser } from '../../store/selectors';
 import { ROUTES } from '../routes';
 
 function PrivateRoute(props) {
-	const userToken = localStorage.getItem('user');
+	const userToken = localStorage.getItem('token');
 	const user = useSelector(getUser);
 
 	/**

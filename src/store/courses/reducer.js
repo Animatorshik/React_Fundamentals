@@ -1,5 +1,5 @@
 import {
-	SET_COURSES,
+	GET_COURSES,
 	CREATE_COURSE,
 	UPDATE_COURSE,
 	DELETE_COURSE,
@@ -11,7 +11,7 @@ let courseIndex;
 
 export const coursesReducer = (state = coursesInitialState, action) => {
 	switch (action.type) {
-		case SET_COURSES:
+		case GET_COURSES:
 			return action.payload;
 
 		case CREATE_COURSE:

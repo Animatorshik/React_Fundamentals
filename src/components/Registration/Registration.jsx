@@ -32,11 +32,11 @@ function Registration() {
 			password: password,
 		};
 
-		postRegisterApi(userData).then((data) => {
-			if (data.successful) {
+		postRegisterApi(userData).then((response) => {
+			if (response.successful) {
 				navigate(ROUTES.LOGIN);
 			} else {
-				setErrors(data.errors);
+				setErrors(response.errors);
 			}
 		});
 	};
