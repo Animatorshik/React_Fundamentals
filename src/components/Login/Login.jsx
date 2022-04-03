@@ -7,7 +7,7 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { postLoginApi } from '../../servisces';
+import { postLoginApi } from '../../services';
 import { userLogin, userRole } from '../../store/user/actionCreators';
 import { ROUTES } from '../../routes/routes';
 

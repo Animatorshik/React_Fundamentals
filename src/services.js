@@ -1,6 +1,8 @@
 import { easyAxios } from './helpers/easyAxios';
 
 const API = process.env.REACT_APP_API;
+const noData = null;
+const withToken = true;
 
 // REGISTER USER
 export const postRegisterApi = (data) => {
@@ -14,12 +16,12 @@ export const postLoginApi = (data) => {
 
 // GET USER ROLE
 export const getRoleApi = () => {
-	return easyAxios(`${API}/users/me`, 'GET', null, true);
+	return easyAxios(`${API}/users/me`, 'GET', noData, withToken);
 };
 
 // LOGOUT USER
 export const deleteLogoutApi = () => {
-	return easyAxios(`${API}/logout`, 'DELETE', null, true);
+	return easyAxios(`${API}/logout`, 'DELETE', noData, withToken);
 };
 
 // GET COURSES
@@ -29,17 +31,17 @@ export const getCoursesApi = () => {
 
 // ADD COURSE
 export const postAddCourseApi = (data) => {
-	return easyAxios(`${API}/courses/add`, 'POST', data, true);
+	return easyAxios(`${API}/courses/add`, 'POST', data, withToken);
 };
 
 // UPDATE COURSE
 export const putUpdateCourseApi = (id, data) => {
-	return easyAxios(`${API}/courses/${id}`, 'PUT', data, true);
+	return easyAxios(`${API}/courses/${id}`, 'PUT', data, withToken);
 };
 
 // DELETE COURSE
 export const deleteCourseApi = (id) => {
-	return easyAxios(`${API}/courses/${id}`, 'DELETE', null, true);
+	return easyAxios(`${API}/courses/${id}`, 'DELETE', noData, withToken);
 };
 
 // GET AUTHORS
@@ -49,5 +51,5 @@ export const getAuthorsApi = () => {
 
 // ADD AUTHOR
 export const postAddAuthorApi = (data) => {
-	return easyAxios(`${API}/authors/add`, 'POST', data, true);
+	return easyAxios(`${API}/authors/add`, 'POST', data, withToken);
 };

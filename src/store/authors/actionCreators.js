@@ -1,4 +1,4 @@
-import { getAuthorsApi, postAddAuthorApi } from '../../servisces';
+import { getAuthorsApi, postAddAuthorApi } from '../../services';
 import {
 	GET_AUTHORS,
 	CREATE_AUTHOR,

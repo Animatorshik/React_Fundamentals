@@ -1,4 +1,4 @@
-import { deleteLogoutApi, getRoleApi } from '../../servisces';
+import { deleteLogoutApi, getRoleApi } from '../../services';
 import { USER_LOGIN, USER_LOGOUT, USER_ROLE } from './actionTypes';
 
 export function userLogin(user) {

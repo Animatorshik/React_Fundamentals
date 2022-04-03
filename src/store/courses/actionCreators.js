@@ -3,7 +3,7 @@ import {
 	getCoursesApi,
 	postAddCourseApi,
 	putUpdateCourseApi,
-} from '../../servisces';
+} from '../../services';
 import {
 	GET_COURSES,
 	CREATE_COURSE,

@@ -6,7 +6,7 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { postRegisterApi } from '../../servisces';
+import { postRegisterApi } from '../../services';
 import { ROUTES } from '../../routes/routes';
 
 function Registration() {
