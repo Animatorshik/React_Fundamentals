@@ -85,10 +85,7 @@ function CreateCourse(props) {
 		const date = new Date();
 		const creationDate = new Intl.DateTimeFormat('en-GB').format(date);
 		const durationNum = Number(duration);
-		const authors = [];
-		separateAuthorsList.course.forEach((author) => {
-			authors.push(author.id);
-		});
+		const authors = separateAuthorsList.course.map((author) => author.id);
 
 		// Validation
 		let createCourseValidation = validation(
@@ -119,10 +116,7 @@ function CreateCourse(props) {
 	 */
 	const updateCourse = () => {
 		const durationNum = Number(duration);
-		const authors = [];
-		separateAuthorsList.course.forEach((author) => {
-			authors.push(author.id);
-		});
+		const authors = separateAuthorsList.course.map((author) => author.id);
 
 		// Validation
 		const updateCourseValidation = validation(
@@ -171,16 +165,13 @@ function CreateCourse(props) {
 
 	// Move authors
 	useEffect(() => {
-		let freeAuthors = [];
-		let courseAuthors = [];
+		let freeAuthors = props.authors
+			.filter((author) => !author.inCourse)
+			.map((author) => author);
 
-		props.authors.forEach((author) => {
-			if (author.inCourse) {
-				courseAuthors.push(author);
-			} else {
-				freeAuthors.push(author);
-			}
-		});
+		let courseAuthors = props.authors
+			.filter((author) => author.inCourse)
+			.map((author) => author);
 
 		setSeparateAuthorsList({ free: freeAuthors, course: courseAuthors });
 	}, [props.authors]);

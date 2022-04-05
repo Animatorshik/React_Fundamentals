@@ -6,9 +6,8 @@ import CourseCard from './components/CourseCard/CourseCard';
 import Button from '../../common/Button/Button';
 import SearchBar from './components/SearchBar/SearchBar';
 
-import { getCoursesApi, getAuthorsApi } from '../../servisces';
-import { setCourses } from '../../store/courses/actionCreators';
-import { setAuthors } from '../../store/authors/actionCreators';
+import { getCourses } from '../../store/courses/actionCreators';
+import { getAuthors } from '../../store/authors/actionCreators';
 import { getUser } from '../../store/selectors';
 import { ADMIN } from '../../roles/roles';
 
@@ -19,11 +18,9 @@ import { ADMIN } from '../../roles/roles';
  * @returns {string}
  */
 let getAuthorsNames = (authorIDs, authorsList) => {
-	let names = [];
-	authorIDs.forEach((id) => {
-		let foundAuthor = authorsList.find((e) => e.id === id);
-		names.push(foundAuthor.name);
-	});
+	let names = authorsList
+		.filter((author) => authorIDs.indexOf(author.id) !== -1)
+		.map((author) => author.name);
 	return names.join(', ');
 };
 
@@ -38,17 +35,9 @@ function Courses(props) {
 
 	// Default Authors and Courses
 	useEffect(() => {
-		getAuthorsApi().then((data) => {
-			if (data.successful && !props.authors.length) {
-				dispatch(setAuthors(data.result));
-			}
-			getCoursesApi().then((data) => {
-				if (data.successful && !coursesList.length) {
-					dispatch(setCourses(data.result));
-				}
-			});
-		});
-	}, []);
+		dispatch(getAuthors());
+		dispatch(getCourses());
+	}, [dispatch]);
 
 	/**
 	 * Search courses by Title or ID
@@ -57,18 +46,17 @@ function Courses(props) {
 		// Get Search input value
 		let inputData = searchValue.toLowerCase();
 
-		// The array with search result
-		let searchResult = [];
-
 		// Looking for courses by Title or ID
-		coursesList.forEach((course) => {
-			let courseTitle = course.title.toLowerCase();
-			let courseId = course.id.toLowerCase();
-			if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
-				// If found, add to result array
-				searchResult.push(course);
-			}
-		});
+		let searchResult = coursesList
+			.filter((course) => {
+				let courseTitle = course.title.toLowerCase();
+				let courseId = course.id.toLowerCase();
+				if (courseTitle.includes(inputData) || courseId.includes(inputData)) {
+					return true;
+				}
+				return false;
+			})
+			.map((course) => course);
 
 		setCoursesList(searchResult);
 	};

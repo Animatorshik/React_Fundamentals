@@ -6,7 +6,7 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { postRegisterApi } from '../../servisces';
+import { postRegisterApi } from '../../services';
 import { ROUTES } from '../../routes/routes';
 
 function Registration() {
@@ -32,11 +32,11 @@ function Registration() {
 			password: password,
 		};
 
-		postRegisterApi(userData).then((data) => {
-			if (data.successful) {
+		postRegisterApi(userData).then((response) => {
+			if (response.successful) {
 				navigate(ROUTES.LOGIN);
 			} else {
-				setErrors(data.errors);
+				setErrors(response.errors);
 			}
 		});
 	};

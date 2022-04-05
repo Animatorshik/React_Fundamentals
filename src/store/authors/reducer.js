@@ -1,5 +1,5 @@
 import {
-	SET_AUTHORS,
+	GET_AUTHORS,
 	CREATE_AUTHOR,
 	MOVE_AUTHOR_TO_COURSE,
 	MOVE_AUTHOR_FROM_COURSE,
@@ -12,7 +12,7 @@ let authorIndex;
 
 export const authorsReducer = (state = authorsInitialState, action) => {
 	switch (action.type) {
-		case SET_AUTHORS:
+		case GET_AUTHORS:
 			return action.payload;
 
 		case CREATE_AUTHOR:

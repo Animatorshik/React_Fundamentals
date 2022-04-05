@@ -7,7 +7,7 @@ import Button from '../../common/Button/Button';
 import Errors from '../Errors/Errors';
 
 import { validation } from '../../helpers/validation';
-import { postLoginApi } from '../../servisces';
+import { postLoginApi } from '../../services';
 import { userLogin, userRole } from '../../store/user/actionCreators';
 import { ROUTES } from '../../routes/routes';
 
@@ -36,24 +36,25 @@ function Login() {
 		// It's because I can't recieve the name from API
 		let name = email;
 
-		postLoginApi(userData).then((data) => {
-			if (data.successful) {
-				localStorage.setItem('user', data.result);
-				dispatch(
-					userLogin({
-						isAuth: true,
-						name: name,
-						email: email,
-						token: data.result,
-						role: '',
-					})
-				);
-				dispatch(userRole());
-				navigate(ROUTES.COURSES);
-			} else {
-				setErrors(['Incorrect Email or Password.']);
-			}
-		});
+		postLoginApi(userData).then(
+			(response) => {
+				if (response.data.successful) {
+					localStorage.setItem('token', response.data.result);
+					dispatch(
+						userLogin({
+							isAuth: true,
+							name: name,
+							email: email,
+							token: response.data.result,
+							role: '',
+						})
+					);
+					dispatch(userRole());
+					navigate(ROUTES.COURSES);
+				}
+			},
+			() => setErrors(['Incorrect Email or Password.'])
+		);
 	};
 
 	// Disable page reloading after form submit

@@ -1,4 +1,4 @@
-import { deleteLogoutApi, getRoleApi } from '../../servisces';
+import { deleteLogoutApi, getRoleApi } from '../../services';
 import { USER_LOGIN, USER_LOGOUT, USER_ROLE } from './actionTypes';
 
 export function userLogin(user) {
@@ -11,10 +11,10 @@ export function userLogin(user) {
 export function userRole() {
 	return async (dispatch) => {
 		const response = await getRoleApi();
-		if (response.successful) {
+		if (response.data.successful) {
 			dispatch({
 				type: USER_ROLE,
-				payload: response.result.role,
+				payload: response.data.result.role,
 			});
 		}
 	};
@@ -23,11 +23,11 @@ export function userRole() {
 export function userLogout() {
 	return async (dispatch) => {
 		const response = await deleteLogoutApi();
-		if (response.successful) {
+		if (response.status === 200) {
 			dispatch({
 				type: USER_LOGOUT,
 			});
-			localStorage.removeItem('user');
+			localStorage.removeItem('token');
 		}
 	};
 }
